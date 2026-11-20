@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tuition Finder — Find Home Tutors in Dhaka</title>
+<style>
+  :root{
+    --amber:#f59e0b; --amber-dark:#d97706; --orange:#ea580c;
+    --cream:#fff7ed; --card:#ffffff; --ink:#292524; --muted:#78716c;
+    --soft:#ffedd5; --radius:26px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:linear-gradient(180deg,#fff7ed 0%,#ffedd5 55%,#fff7ed 100%);color:var(--ink);min-height:100vh}
+  header{background:linear-gradient(120deg,#f59e0b,#ea580c);color:#fff;padding:44px 20px 54px;text-align:center;border-radius:0 0 42px 42px;box-shadow:0 12px 30px rgba(234,88,12,.28)}
+  header h1{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:-.5px}
+  header p{opacity:.95;margin-top:8px;font-size:clamp(.95rem,3vw,1.1rem)}
+  .pill{display:inline-block;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.5);padding:5px 14px;border-radius:999px;font-size:.82rem;margin-bottom:14px;font-weight:600}
+  main{max-width:1120px;margin:-30px auto 0;padding:0 16px 40px}
+  .toolbar{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:0 14px 34px rgba(146,64,14,.14);display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px}
+  .toolbar input,.toolbar select,.form-grid input,.form-grid select{width:100%;padding:13px 16px;border:2px solid #fed7aa;border-radius:16px;font-size:.98rem;background:#fffbf5;outline:none;transition:border-color .2s, box-shadow .2s;font-family:inherit}
+  .toolbar input:focus,.toolbar select:focus,.form-grid input:focus,.form-grid select:focus{border-color:var(--amber);box-shadow:0 0 0 4px rgba(245,158,11,.18)}
+  .count{margin:22px 4px 12px;color:var(--muted);font-weight:600}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px}
+  @keyframes riseIn{from{opacity:0;transform:translateY(26px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+  .card{background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:0 8px 22px rgba(146,64,14,.10);transition:transform .28s ease,box-shadow .28s ease;animation:riseIn .55s ease both}
+  .card:hover{transform:translateY(-9px);box-shadow:0 22px 40px rgba(146,64,14,.22)}
+  .card img{width:100%;height:190px;object-fit:cover;display:block}
+  .card-body{padding:20px 22px 22px}
+  .card h3{font-size:1.28rem;margin-bottom:2px}
+  .uni{color:var(--muted);font-size:.88rem;margin-bottom:12px}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .tag{background:var(--soft);color:#9a3412;padding:5px 12px;border-radius:999px;font-size:.8rem;font-weight:700}
+  .tag.class{background:#fef3c7;color:#92400e}
+  .meta{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;font-size:.92rem;margin-bottom:16px}
+  .meta b{color:var(--ink)}
+  .salary{font-size:1.25rem;font-weight:800;color:var(--orange)}
+  .salary small{font-size:.8rem;color:var(--muted);font-weight:600}
+  .contact{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:2px dashed #fed7aa;padding-top:16px}
+  .call-btn{background:linear-gradient(120deg,var(--amber),var(--orange));color:#fff;text-decoration:none;padding:11px 20px;border-radius:999px;font-weight:700;font-size:.95rem;transition:transform .2s, box-shadow .2s;box-shadow:0 6px 16px rgba(234,88,12,.35)}
+  .call-btn:hover{transform:scale(1.05)}
+  .new-badge{background:#dc2626;color:#fff;font-size:.7rem;font-weight:800;padding:4px 10px;border-radius:999px;letter-spacing:.5px}
+  .empty{background:#fff;border-radius:var(--radius);padding:44px 20px;text-align:center;color:var(--muted);grid-column:1/-1;box-shadow:0 8px 22px rgba(146,64,14,.08)}
+  section.post{background:#fff;border-radius:var(--radius);padding:28px;margin-top:36px;box-shadow:0 14px 34px rgba(146,64,14,.12)}
+  section.post h2{font-size:1.5rem;margin-bottom:6px}
+  section.post p.sub{color:var(--muted);margin-bottom:18px}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .form-grid .full{grid-column:1/-1}
+  .post-btn{grid-column:1/-1;background:linear-gradient(120deg,var(--amber),var(--orange));color:#fff;border:none;padding:15px;border-radius:16px;font-size:1.05rem;font-weight:800;cursor:pointer;transition:transform .2s;font-family:inherit}
+  .post-btn:hover{transform:translateY(-2px)}
+  .toast{display:none;background:#166534;color:#fff;padding:12px 18px;border-radius:14px;margin-top:14px;font-weight:600}
+  footer{text-align:center;color:var(--muted);padding:26px 16px 34px;font-size:.92rem}
+  footer b{color:var(--orange)}
+  @media(max-width:760px){
+    .toolbar{grid-template-columns:1fr 1fr}
+    .toolbar input{grid-column:1/-1}
+    .form-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<header>
+  <span class="pill">Dhaka • Home Tuition Marketplace</span>
+  <h1>Tuition Finder</h1>
+  <p>Find a trusted home tutor near you — or post your tuition and let tutors call you.</p>
+</header>
+
+<main>
+  <div class="toolbar">
+    <input type="search" id="searchBox" placeholder="Search tutor name, subject or area…">
+    <select id="subjectFilter">
+      <option value="">All Subjects</option>
+      <option>Mathematics</option><option>Physics</option><option>Chemistry</option>
+      <option>Biology</option><option>English</option><option>Bangla</option>
+      <option>ICT</option><option>Accounting</option><option>General Science</option>
+    </select>
+    <select id="classFilter">
+      <option value="">All Classes</option>
+      <option>Class 5</option><option>Class 6</option><option>Class 7</option><option>Class 8</option>
+      <option>Class 9</option><option>Class 10</option><option>HSC</option><option>Admission</option>
+    </select>
+    <select id="areaFilter">
+      <option value="">All Areas</option>
+      <option>Mirpur</option><option>Uttara</option><option>Dhanmondi</option><option>Banani</option>
+      <option>Mohammadpur</option><option>Badda</option><option>Khilgaon</option><option>Jatrabari</option>
+    </select>
+  </div>
+
+  <p class="count" id="resultCount"></p>
+  <div class="grid" id="tutorGrid"></div>
+
+  <section class="post">
+    <h2>Post a Tuition</h2>
+    <p class="sub">Looking for a tutor? Post your requirement — it appears in the list above instantly and stays saved on this device.</p>
+    <form class="form-grid" id="postForm">
+      <input required id="fGuardian" placeholder="Guardian / Student name, e.g. Rahim Uddin">
+      <input required id="fPhone" placeholder="Mobile number, e.g. 01712-345678" inputmode="tel">
+      <select required id="fSubject">
+        <option value="">Select subject</option>
+        <option>Mathematics</option><option>Physics</option><option>Chemistry</option>
+        <option>Biology</option><option>English</option><option>Bangla</option>
+        <option>ICT</option><option>Accounting</option><option>General Science</option>
+      </select>
+      <select required id="fClass">
+        <option value="">Select class</option>
+        <option>Class 5</option><option>Class 6</option><option>Class 7</option><option>Class 8</option>
+        <option>Class 9</option><option>Class 10</option><option>HSC</option><option>Admission</option>
+      </select>
+      <select required id="fArea">
+        <option value="">Select area</option>
+        <option>Mirpur</option><option>Uttara</option><option>Dhanmondi</option><option>Banani</option>
+        <option>Mohammadpur</option><option>Badda</option><option>Khilgaon</option><option>Jatrabari</option>
+      </select>
+      <input required id="fBudget" type="number" min="500" step="100" placeholder="Monthly budget (৳), e.g. 6000">
+      <input class="full" id="fNote" placeholder="Note (optional), e.g. 4 days a week, evening preferred">
+      <button class="post-btn" type="submit">Post Tuition</button>
+    </form>
+    <div class="toast" id="toast">Your tuition has been posted! It is now visible at the top of the list.</div>
+  </section>
+</main>
+
+<footer>Tuition Finder — connecting Dhaka families with home tutors.<br>Built by <b>Nafiz Bin Azad</b></footer>
+
+<script>
+var TUTORS = [
+  {name:"Tanvir Hasan", uni:"University of Dhaka — Mathematics", subjects:["Mathematics","Physics"], classes:["Class 9","Class 10","HSC"], area:"Mirpur", salary:8000, exp:"5 years", days:"5 days / week", phone:"01712345601", img:"images/tutor1.jpg"},
+  {name:"Nusrat Jahan", uni:"Jahangirnagar University — English", subjects:["English","Bangla"], classes:["Class 6","Class 7","Class 8"], area:"Uttara", salary:6000, exp:"4 years", days:"4 days / week", phone:"01812345602", img:"images/tutor2.jpg"},
+  {name:"Arif Chowdhury", uni:"BUET — EEE", subjects:["Physics","Mathematics","ICT"], classes:["HSC","Admission"], area:"Dhanmondi", salary:12000, exp:"6 years", days:"3 days / week", phone:"01912345603", img:"images/tutor3.jpg"},
+  {name:"Farhana Islam", uni:"Dhaka College — Chemistry", subjects:["Chemistry","Biology"], classes:["Class 9","Class 10","HSC"], area:"Mohammadpur", salary:9000, exp:"7 years", days:"4 days / week", phone:"01612345604", img:"images/tutor4.jpg"},
+  {name:"Rakibul Islam", uni:"University of Dhaka — Accounting", subjects:["Accounting","Mathematics"], classes:["Class 9","Class 10","HSC"], area:"Khilgaon", salary:7000, exp:"3 years", days:"5 days / week", phone:"01512345605", img:"images/tutor6.jpg"},
+  {name:"Sharmin Akter", uni:"Eden Mohila College — Botany", subjects:["Biology","General Science","Bangla"], classes:["Class 5","Class 6","Class 7","Class 8"], area:"Jatrabari", salary:5000, exp:"4 years", days:"6 days / week", phone:"01312345606", img:"images/tutor7.png"}
+];
+
+function loadPosts(){
+  try { return JSON.parse(localStorage.getItem("tf_posts") || "[]"); }
+  catch(e){ return []; }
+}
+function savePosts(p){ localStorage.setItem("tf_posts", JSON.stringify(p)); }
+
+function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+
+function render(){
+  var q = document.getElementById("searchBox").value.trim().toLowerCase();
+  var sub = document.getElementById("subjectFilter").value;
+  var cls = document.getElementById("classFilter").value;
+  var area = document.getElementById("areaFilter").value;
+
+  var posts = loadPosts().map(function(p){
+    return {name:p.name, uni:"Tuition wanted — " + (p.note || "Guardian post"), subjects:[p.subject], classes:[p.cls], area:p.area, salary:p.budget, exp:"—", days:"To discuss", phone:p.phone, img:"images/tutor3.jpg", isPost:true};
+  });
+  var all = posts.concat(TUTORS);
+
+  var list = all.filter(function(t){
+    if(sub && t.subjects.indexOf(sub) === -1) return false;
+    if(cls && t.classes.indexOf(cls) === -1) return false;
+    if(area && t.area !== area) return false;
+    if(q){
+      var hay = (t.name + " " + t.subjects.join(" ") + " " + t.area + " " + t.uni).toLowerCase();
+      if(hay.indexOf(q) === -1) return false;
+    }
+    return true;
+  });
+
+  var grid = document.getElementById("tutorGrid");
+  document.getElementById("resultCount").textContent = list.length + (list.length === 1 ? " listing found" : " listings found");
+  if(!list.length){
+    grid.innerHTML = '<div class="empty">No tutors match your filters. Try a different subject, class or area.</div>';
+    return;
+  }
+  grid.innerHTML = list.map(function(t, i){
+    var tags = t.subjects.map(function(s){ return '<span class="tag">' + esc(s) + '</span>'; }).join("") +
+               t.classes.map(function(c){ return '<span class="tag class">' + esc(c) + '</span>'; }).join("");
+    return '<article class="card" style="animation-delay:' + (i * 90) + 'ms">' +
+      '<img src="' + t.img + '" alt="Tutor teaching students" loading="lazy">' +
+      '<div class="card-body"><h3>' + esc(t.name) + (t.isPost ? ' <span class="new-badge">NEW POST</span>' : '') + '</h3>' +
+      '<p class="uni">' + esc(t.uni) + '</p>' +
+      '<div class="tags">' + tags + '</div>' +
+      '<div class="meta"><span>Area: <b>' + esc(t.area) + ', Dhaka</b></span><span>Experience: <b>' + esc(t.exp) + '</b></span>' +
+      '<span>Schedule: <b>' + esc(t.days) + '</b></span><span>Mobile: <b>' + esc(t.phone) + '</b></span></div>' +
+      '<div class="contact"><span class="salary">৳' + Number(t.salary).toLocaleString("en-IN") + ' <small>/ month</small></span>' +
+      '<a class="call-btn" href="tel:+88' + esc(t.phone) + '">Call Now</a></div>' +
+      '</div></article>';
+  }).join("");
+}
+
+["searchBox","subjectFilter","classFilter","areaFilter"].forEach(function(id){
+  document.getElementById(id).addEventListener("input", render);
+  document.getElementById(id).addEventListener("change", render);
+});
+
+document.getElementById("postForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  var posts = loadPosts();
+  posts.unshift({
+    name: document.getElementById("fGuardian").value.trim(),
+    phone: document.getElementById("fPhone").value.trim(),
+    subject: document.getElementById("fSubject").value,
+    cls: document.getElementById("fClass").value,
+    area: document.getElementById("fArea").value,
+    budget: Number(document.getElementById("fBudget").value),
+    note: document.getElementById("fNote").value.trim()
+  });
+  savePosts(posts);
+  e.target.reset();
+  render();
+  var toast = document.getElementById("toast");
+  toast.style.display = "block";
+  window.scrollTo({top:0, behavior:"smooth"});
+  setTimeout(function(){ toast.style.display = "none"; }, 5000);
+});
+
+render();
+</script>
+</body>
+</html>
